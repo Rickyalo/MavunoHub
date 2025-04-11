@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:background="@drawable/profile"
+    android:focusableInTouchMode="true"
+    android:clickable="true">
+
+    <!-- Top Bar with Profile & Logout -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/profilePicture"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/profile_circle"
+            android:layout_alignParentStart="true"
+            android:contentDescription="Profile" />
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Farmer Name"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:layout_toEndOf="@id/profilePicture"
+            android:layout_marginStart="10dp" />
+
+        <ImageView
+            android:id="@+id/logoutIcon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_logout"
+            android:layout_alignParentEnd="true"
+            android:contentDescription="Logout" />
+    </RelativeLayout>
+
+    <!-- Buttons for Adding & Managing Products -->
+    <Button
+        android:id="@+id/btnAddProduct"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Product"
+        android:backgroundTint="@color/textTabLight"
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
+        android:focusable="true"
+        android:clickable="true" />
+
+    <Button
+        android:id="@+id/btnManageProducts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Manage Products"
+        android:backgroundTint="@color/blue"
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
+        android:focusable="true"
+        android:clickable="true" />
+
+    <Button
+        android:id="@+id/btnViewOrders"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="View Orders"
+        android:backgroundTint="@color/orange"
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
+        android:focusable="true"
+        android:clickable="true" />
+
+    <!-- Generate Report Button -->
+    <Button
+        android:id="@+id/btnGenerateReport"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Generate Report"
+        android:backgroundTint="@color/green"
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
+        android:focusable="true"
+        android:clickable="true" />
+</LinearLayout>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "404299084953",
+    "project_id": "mavunohub-761e2",
+    "storage_bucket": "mavunohub-761e2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:404299084953:android:82284313dfea8d96797408",
+        "android_client_info": {
+          "package_name": "com.example.mavunohub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWM_gayQPWh9VH0y41s9h5L-z_wwB1cD8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
