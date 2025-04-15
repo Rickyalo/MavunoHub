@@ -18,6 +18,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersView
     private final List<OrderItem> orderList;
     private final OnOrderActionListener listener;
 
+    // Listener interface for marking orders as sold
     public interface OnOrderActionListener {
         void onMarkAsSold(OrderItem order);
     }
@@ -39,11 +40,16 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersView
     public void onBindViewHolder(@NonNull OrdersViewHolder holder, int position) {
         OrderItem order = orderList.get(position);
 
-        holder.buyerName.setText("Buyer ID: " + order.getBuyerId());
+        // Display buyer details (updated to handle phone field)
+        holder.buyerName.setText("Phone: " + order.getPhone());
         holder.productDetails.setText("Products:\n" + order.getProductsDetails());
         holder.orderStatus.setText("Status: " + order.getStatus());
         holder.totalPrice.setText("Total: KES " + String.format("%.2f", order.getTotalPrice()));
 
+        // Set the user type (optional, for better clarity in multi-role systems)
+        holder.userType.setText("User Type: " + order.getUserType());
+
+        // Handle "Mark as Sold" button click
         holder.markAsSoldButton.setOnClickListener(v -> listener.onMarkAsSold(order));
     }
 
@@ -53,15 +59,16 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersView
     }
 
     public static class OrdersViewHolder extends RecyclerView.ViewHolder {
-        TextView buyerName, productDetails, orderStatus, totalPrice;
+        TextView buyerName, productDetails, orderStatus, totalPrice, userType;
         Button markAsSoldButton;
 
         public OrdersViewHolder(@NonNull View itemView) {
             super(itemView);
-            buyerName = itemView.findViewById(R.id.buyerName);
+            buyerName = itemView.findViewById(R.id.phone);
             productDetails = itemView.findViewById(R.id.productDetails);
             orderStatus = itemView.findViewById(R.id.orderStatus);
             totalPrice = itemView.findViewById(R.id.totalPrice);
+            userType = itemView.findViewById(R.id.userType);
             markAsSoldButton = itemView.findViewById(R.id.markAsSoldButton);
         }
     }

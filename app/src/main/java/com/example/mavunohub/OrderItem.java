@@ -4,21 +4,22 @@ import java.util.List;
 
 public class OrderItem {
     private String id;
-    private String buyerId;
-    private String farmerId;
+    private String phone; // Shared phone for identifying buyer or farmer
+    private String userType; // "Buyer" or "Farmer"
     private List<Product> products;
     private String status;
 
     public OrderItem() {}
 
-    public OrderItem(String id, String buyerId, String farmerId, List<Product> products, String status) {
+    public OrderItem(String id, String phone, String userType, List<Product> products, String status) {
         this.id = id;
-        this.buyerId = buyerId;
-        this.farmerId = farmerId;
+        this.phone = phone;
+        this.userType = userType;
         this.products = products;
         this.status = status;
     }
 
+    // Getter and Setter for ID
     public String getId() {
         return id;
     }
@@ -27,22 +28,25 @@ public class OrderItem {
         this.id = id;
     }
 
-    public String getBuyerId() {
-        return buyerId;
+    // Getter and Setter for Phone
+    public String getPhone() {
+        return phone;
     }
 
-    public void setBuyerId(String buyerId) {
-        this.buyerId = buyerId;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public String getFarmerId() {
-        return farmerId;
+    // Getter and Setter for User Type
+    public String getUserType() {
+        return userType;
     }
 
-    public void setFarmerId(String farmerId) {
-        this.farmerId = farmerId;
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 
+    // Getter and Setter for Products
     public List<Product> getProducts() {
         return products;
     }
@@ -51,6 +55,7 @@ public class OrderItem {
         this.products = products;
     }
 
+    // Getter and Setter for Status
     public String getStatus() {
         return status;
     }
@@ -59,6 +64,7 @@ public class OrderItem {
         this.status = status;
     }
 
+    // Calculate Total Price
     public double getTotalPrice() {
         double total = 0.0;
         for (Product product : products) {
@@ -67,12 +73,14 @@ public class OrderItem {
         return total;
     }
 
+    // Generate Product Details as String
     public String getProductsDetails() {
         StringBuilder details = new StringBuilder();
         for (Product product : products) {
             details.append(product.getName())
                     .append(" (Qty: ").append(product.getQuantity())
-                    .append(" @ KES ").append(String.format("%.2f", product.getPricePerUnit())).append(")\n");
+                    .append(" @ KES ").append(String.format("%.2f", product.getPricePerUnit()))
+                    .append(")\n");
         }
         return details.toString();
     }

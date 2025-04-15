@@ -25,7 +25,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivityBuyer extends AppCompatActivity {
 
@@ -71,7 +73,7 @@ public class MainActivityBuyer extends AppCompatActivity {
 
             @Override
             public void onAddToCartClick(Product product) {
-                addToCart(product);
+                addToCart(product); // Calls add to cart and creates the order
             }
         });
         recyclerView.setAdapter(productAdapter);
@@ -154,10 +156,31 @@ public class MainActivityBuyer extends AppCompatActivity {
         db.collection("cart")
                 .document(cartItemId)
                 .set(cartItem)
-                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Product added to cart!", Toast.LENGTH_SHORT).show())
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Product added to cart!", Toast.LENGTH_SHORT).show();
+                    createOrder(product); // Call createOrder method here
+                })
                 .addOnFailureListener(e -> Toast.makeText(this, "Failed to add to cart: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
+    private void createOrder(Product product) {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null) {
+            Toast.makeText(this, "Please log in first", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Map<String, Object> orderData = new HashMap<>();
+        orderData.put("phone", product.getPhone()); // Use product's phone for buyer or seller
+        orderData.put("userType", "Buyer"); // Assuming the user is a buyer
+        orderData.put("products", List.of(product)); // Create an order with the product
+        orderData.put("status", "Pending"); // Initial order status
+
+        db.collection("orders")
+                .add(orderData)
+                .addOnSuccessListener(documentReference -> Toast.makeText(this, "Order created successfully!", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Toast.makeText(this, "Failed to create order: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
 
     private void filterProducts(String query) {
         List<Product> filteredList = new ArrayList<>();

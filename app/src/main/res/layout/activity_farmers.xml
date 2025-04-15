@@ -16,8 +16,10 @@
 
         <ImageView
             android:id="@+id/profilePicture"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleType="centerCrop"
+            android:background="@drawable/round_background"
             android:src="@drawable/profile_circle"
             android:layout_alignParentStart="true"
             android:contentDescription="Profile" />
@@ -26,6 +28,7 @@
             android:id="@+id/username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
             android:text="Farmer Name"
             android:textSize="18sp"
             android:textColor="@color/black"

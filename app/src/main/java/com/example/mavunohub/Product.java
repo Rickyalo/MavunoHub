@@ -39,6 +39,7 @@ public class Product {
         this.userId = userId;
     }
 
+    // Existing Getters
     public String getId() {
         return id;
     }
@@ -103,6 +104,7 @@ public class Product {
         return userId;
     }
 
+    // Existing Setters
     public void setId(String id) {
         this.id = id;
     }
@@ -159,5 +161,14 @@ public class Product {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    // New Functionality - Added Enhancements
+    public boolean isInStock() {
+        return "In Stock".equalsIgnoreCase(this.stockStatus);
+    }
+
+    public void updateTotalPrice() {
+        this.totalPrice = this.pricePerUnit * this.quantity;
     }
 }

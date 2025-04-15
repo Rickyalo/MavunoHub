@@ -4,14 +4,25 @@
     android:orientation="vertical"
     android:padding="8dp">
 
+    <!-- Display the phone number (replaces Buyer ID for clarity) -->
     <TextView
-        android:id="@+id/buyerName"
+        android:id="@+id/phone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Buyer ID: "
+        android:text="Phone: "
         android:textSize="16sp"
         android:textStyle="bold" />
 
+    <!-- Display the user type (e.g., Farmer or Buyer) -->
+    <TextView
+        android:id="@+id/userType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User Type: "
+        android:paddingTop="2dp"
+        android:textSize="14sp" />
+
+    <!-- Display the details of the products -->
     <TextView
         android:id="@+id/productDetails"
         android:layout_width="wrap_content"
@@ -20,6 +31,7 @@
         android:paddingTop="4dp"
         android:textSize="14sp" />
 
+    <!-- Display the status of the order -->
     <TextView
         android:id="@+id/orderStatus"
         android:layout_width="wrap_content"
@@ -28,6 +40,7 @@
         android:paddingTop="4dp"
         android:textSize="14sp" />
 
+    <!-- Display the total price -->
     <TextView
         android:id="@+id/totalPrice"
         android:layout_width="wrap_content"
@@ -37,6 +50,7 @@
         android:textSize="14sp"
         android:textStyle="bold" />
 
+    <!-- Button to mark the order as sold -->
     <Button
         android:id="@+id/markAsSoldButton"
         android:layout_width="wrap_content"

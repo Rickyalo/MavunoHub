@@ -16,7 +16,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CartActivity extends AppCompatActivity {
 
@@ -54,7 +56,7 @@ public class CartActivity extends AppCompatActivity {
 
         purchaseButton.setOnClickListener(v -> {
             if (!cartItemList.isEmpty()) {
-                openWhatsApp(cartItemList.get(0).getPhone()); // Pass the phone number of the first item in the cart
+                createOrder(); // Create the order and then open WhatsApp
             } else {
                 Toast.makeText(this, "Your cart is empty.", Toast.LENGTH_SHORT).show();
             }
@@ -83,11 +85,57 @@ public class CartActivity extends AppCompatActivity {
     }
 
     private void calculateTotalPrice() {
+        double total = calculateTotalPriceAsDouble();
+        totalPriceTextView.setText("Total Price: KES " + String.format("%.2f", total));
+    }
+
+    private double calculateTotalPriceAsDouble() {
         double total = 0.0;
         for (CartItem item : cartItemList) {
             total += item.getPricePerUnit() * item.getQuantity();
         }
-        totalPriceTextView.setText("Total Price: KES " + String.format("%.2f", total));
+        return total;
+    }
+
+    private void createOrder() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        String userId = mAuth.getUid();
+
+        if (userId == null) {
+            Toast.makeText(this, "Please log in first.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Map<String, Object> orderData = new HashMap<>();
+        orderData.put("userId", userId);
+        orderData.put("cartItems", cartItemList); // Send the entire cart items
+        orderData.put("totalPrice", calculateTotalPriceAsDouble()); // Total price
+        orderData.put("status", "Pending"); // Initial status
+
+        db.collection("orders")
+                .add(orderData)
+                .addOnSuccessListener(documentReference -> {
+                    Toast.makeText(this, "Order created successfully!", Toast.LENGTH_SHORT).show();
+                    clearCart(); // Clear the cart after order creation
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, "Failed to create order: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
+    private void clearCart() {
+        String userId = FirebaseAuth.getInstance().getUid();
+        db.collection("cart")
+                .whereEqualTo("userId", userId)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    for (QueryDocumentSnapshot document : querySnapshot) {
+                        db.collection("cart").document(document.getId()).delete();
+                    }
+                    cartItemList.clear();
+                    cartAdapter.notifyDataSetChanged();
+                    calculateTotalPrice();
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, "Failed to clear cart: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     public void openWhatsApp(String phone) {
@@ -97,7 +145,7 @@ public class CartActivity extends AppCompatActivity {
         }
 
         if (phone.startsWith("0")) {
-            phone = "+254" + phone.substring(1); // Add country code for Kenyan numbers
+            phone = "+254" + phone.substring(1);
         }
 
         String message = "Hello, I would like to discuss my purchase.";
