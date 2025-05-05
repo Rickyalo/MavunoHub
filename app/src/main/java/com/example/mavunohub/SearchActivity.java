@@ -30,12 +30,10 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        // Initialize Firebase and RecyclerView
         db = FirebaseFirestore.getInstance();
         searchRecyclerView = findViewById(R.id.searchRecyclerView);
         searchInput = findViewById(R.id.searchInput);
 
-        // Initialize product list and adapter
         productList = new ArrayList<>();
         productAdapter = new ProductAdapterBuyer(this, productList, new ProductAdapterBuyer.OnProductClickListener() {
             @Override
@@ -52,10 +50,10 @@ public class SearchActivity extends AppCompatActivity {
         searchRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         searchRecyclerView.setAdapter(productAdapter);
 
-        // Load all products
+
         loadProducts();
 
-        // Add text change listener for search functionality
+
         searchInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}

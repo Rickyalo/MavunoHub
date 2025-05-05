@@ -35,7 +35,6 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         productList = new ArrayList<>();
-        // Now passing 3 arguments: context, productList, and click listener (this activity)
         productAdapter = new ProductAdapterFarmer(this, productList, this);
         recyclerView.setAdapter(productAdapter);
 
@@ -69,10 +68,10 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
         });
     }
 
-    // Implement the OnProductClickListener methods
+
     @Override
     public void onEditClick(Product product) {
-        // Handle edit action
+
         Intent intent = new Intent(this, EditProductActivity.class);
         intent.putExtra("productId", product.getId());
         startActivity(intent);
@@ -80,7 +79,6 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
 
     @Override
     public void onDeleteClick(Product product) {
-        // Handle delete action
         productsRef.child(product.getId()).removeValue()
                 .addOnSuccessListener(aVoid -> Toast.makeText(this, "Product deleted", Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e -> Toast.makeText(this, "Delete failed", Toast.LENGTH_SHORT).show());

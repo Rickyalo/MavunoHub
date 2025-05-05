@@ -24,8 +24,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     private final OnCartActionListener listener;
 
     public interface OnCartActionListener {
-        void onQuantityChanged(); // Triggered when quantity changes
-        void onItemRemoved();     // Triggered when an item is removed
+        void onQuantityChanged();
+        void onItemRemoved();
     }
 
     public CartAdapter(Context context, List<CartItem> cartItemList, OnCartActionListener listener) {

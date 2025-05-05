@@ -4,60 +4,56 @@
     android:orientation="vertical"
     android:padding="8dp">
 
-    <!-- Display the phone number (replaces Buyer ID for clarity) -->
+    <!-- ✅ Product Image -->
+    <ImageView
+        android:id="@+id/productImage"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="Product Image" />
+
     <TextView
-        android:id="@+id/phone"
+        android:id="@+id/buyerId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Phone: "
+        android:text="Buyer ID: "
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:paddingTop="4dp" />
 
-    <!-- Display the user type (e.g., Farmer or Buyer) -->
-    <TextView
-        android:id="@+id/userType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="User Type: "
-        android:paddingTop="2dp"
-        android:textSize="14sp" />
-
-    <!-- Display the details of the products -->
     <TextView
         android:id="@+id/productDetails"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Products:"
         android:paddingTop="4dp"
         android:textSize="14sp" />
 
-    <!-- Display the status of the order -->
     <TextView
         android:id="@+id/orderStatus"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Status: "
         android:paddingTop="4dp"
         android:textSize="14sp" />
 
-    <!-- Display the total price -->
     <TextView
         android:id="@+id/totalPrice"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Total: "
         android:paddingTop="4dp"
         android:textSize="14sp"
         android:textStyle="bold" />
 
-    <!-- Button to mark the order as sold -->
     <Button
         android:id="@+id/markAsSoldButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Mark as Sold"
-        android:padding="4dp"
+        android:padding="8dp"
         android:layout_marginTop="8dp"
         android:backgroundTint="@color/colorAccent"
         android:textColor="@android:color/white" />
+
 </LinearLayout>

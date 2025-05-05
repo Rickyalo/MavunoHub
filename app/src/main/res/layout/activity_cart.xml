@@ -31,8 +31,21 @@
             android:id="@+id/purchaseButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Purchase"
+            android:text="Order"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
             android:backgroundTint="@color/colorAccent"
+            android:textColor="@android:color/white"
+            android:padding="16dp" />
+
+        <Button
+            android:id="@+id/chatButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:text="Chat with Farmer"
+            android:backgroundTint="@color/colorPrimary"
             android:textColor="@android:color/white"
             android:padding="16dp" />
 </LinearLayout>

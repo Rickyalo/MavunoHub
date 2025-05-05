@@ -1,33 +1,61 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="20dp"
-    android:background="@drawable/profile">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Select Report Type"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="@color/black" />
-
-    <Spinner
-        android:id="@+id/spinnerReportType"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/spinner_bg"
-        android:padding="8dp"/>
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:gravity="center_horizontal">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Report Type"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="10dp"/>
 
-    <Button
-        android:id="@+id/btnGenerateReport"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Generate Report"
-        android:backgroundTint="@color/green"
-        android:textColor="@color/white"
-        android:layout_marginTop="20dp" />
-</LinearLayout>
+        <Spinner
+            android:id="@+id/spinnerReportType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/btn_dropdown"
+            android:padding="8dp"/>
+
+        <Button
+            android:id="@+id/btnGenerateReport"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Generate Report"
+            android:backgroundTint="@android:color/holo_blue_light"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="10dp"/>
+
+        <!-- ✅ Preview Report Section -->
+        <TextView
+            android:id="@+id/tvReportPreview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Report Preview Will Appear Here"
+            android:padding="10dp"
+            android:background="@android:color/darker_gray"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:layout_marginTop="15dp"
+            android:minHeight="150dp"/>
+
+        <Button
+            android:id="@+id/btnSavePDF"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save PDF"
+            android:backgroundTint="@android:color/holo_green_dark"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"/> <!-- Hidden until report is generated -->
+    </LinearLayout>
+</ScrollView>

@@ -12,11 +12,12 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -45,13 +46,11 @@ public class AddProductActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_product);
 
-        // Initialize Firebase components
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference("product_images");
 
-        // Bind XML views
         etProductName = findViewById(R.id.etProductName);
         etProductPrice = findViewById(R.id.etProductPrice);
         etProductQuantity = findViewById(R.id.etProductQuantity);
@@ -63,18 +62,15 @@ public class AddProductActivity extends AppCompatActivity {
         ivProductImage = findViewById(R.id.ivProductImage);
         spinnerUnit = findViewById(R.id.spinnerUnit);
 
-        // Spinner options for units
-        String[] units = {"Kgs", "Litres", "Crates","Animals"};
+        String[] units = {"Kgs", "Litres", "Crates", "Animals"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, units);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerUnit.setAdapter(adapter);
 
-        // Progress dialog
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Uploading product...");
         progressDialog.setCancelable(false);
 
-        // Set listeners
         btnUploadImage.setOnClickListener(v -> openImageChooser());
         btnSubmitProduct.setOnClickListener(v -> submitProduct());
     }
@@ -102,11 +98,10 @@ public class AddProductActivity extends AppCompatActivity {
         String productPrice = etProductPrice.getText().toString().trim();
         String productQuantity = etProductQuantity.getText().toString().trim();
         String productUnit = spinnerUnit.getSelectedItem().toString();
-        String phoneNumber = etPhoneNumber.getText().toString().trim();
+        String phoneNumber = formatPhoneNumber(etPhoneNumber.getText().toString().trim());
         String county = etCounty.getText().toString().trim();
         String subCounty = etSubCounty.getText().toString().trim();
 
-        // Validate inputs
         if (productName.isEmpty() || productPrice.isEmpty() || productQuantity.isEmpty() ||
                 phoneNumber.isEmpty() || county.isEmpty() || subCounty.isEmpty()) {
             Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
@@ -142,10 +137,21 @@ public class AddProductActivity extends AppCompatActivity {
 
     private void saveProductToFirestore(String name, double pricePerUnit, int quantity, String unit,
                                         String phone, String county, String subCounty, String imageUrl) {
-        String userId = mAuth.getCurrentUser().getUid();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null) {
+            progressDialog.dismiss();
+            Toast.makeText(AddProductActivity.this, "User not authenticated!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String userId = user.getUid();
         double totalPrice = pricePerUnit * quantity;
 
+        DocumentReference newProductRef = db.collection("products").document();
+        String productId = newProductRef.getId();
+
         Map<String, Object> product = new HashMap<>();
+        product.put("productId", productId);
         product.put("name", name);
         product.put("pricePerUnit", pricePerUnit);
         product.put("quantity", quantity);
@@ -157,13 +163,22 @@ public class AddProductActivity extends AppCompatActivity {
         product.put("imageUrl", imageUrl);
         product.put("sellerId", userId);
 
-        db.collection("products").add(product).addOnSuccessListener(documentReference -> {
-            progressDialog.dismiss();
-            Toast.makeText(AddProductActivity.this, "Product added successfully!", Toast.LENGTH_SHORT).show();
-            finish();
-        }).addOnFailureListener(e -> {
-            progressDialog.dismiss();
-            Toast.makeText(AddProductActivity.this, "Failed to add product!", Toast.LENGTH_SHORT).show();
-        });
+        newProductRef.set(product)
+                .addOnSuccessListener(aVoid -> {
+                    progressDialog.dismiss();
+                    Toast.makeText(AddProductActivity.this, "Product added successfully!", Toast.LENGTH_SHORT).show();
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    progressDialog.dismiss();
+                    Toast.makeText(AddProductActivity.this, "Failed to add product!", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private String formatPhoneNumber(String phone) {
+        if (phone != null && phone.startsWith("0")) {
+            return "+254" + phone.substring(1);
+        }
+        return phone;
     }
 }

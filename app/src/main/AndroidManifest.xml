@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="28"/>
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28"/>
 
     <application
         android:allowBackup="true"
@@ -33,10 +35,12 @@
         <activity android:name=".EditProductActivity" android:exported="false"/>
         <activity android:name=".ManageProductsActivity" android:exported="false"/>
         <activity android:name=".ProductsActivity" android:exported="false"/>
-        <activity android:name=".ViewOrdersActivity" android:exported="false"/>
+        <activity android:name=".ViewOrdersActivity" android:exported="true"/>
         <activity android:name=".CartActivity" android:exported="true"/>
         <activity android:name=".SearchActivity" android:exported="true"/>
         <activity android:name=".GenerateReportActivity" android:exported="false"/>
+        <activity android:name=".ChatActivity" android:exported="true"/>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.mavunohub.fileprovider"
@@ -44,6 +48,12 @@
             android:grantUriPermissions="true">
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths"/>
         </provider>
-
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.mavunohub.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths"/>
+        </provider>
     </application>
 </manifest>

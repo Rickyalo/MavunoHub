@@ -20,10 +20,10 @@ public class SignOutDialog extends Dialog {
         Button btnCancel = findViewById(R.id.btnCancel);
         Button btnConfirmSignOut = findViewById(R.id.btnConfirmSignOut);
 
-        // Cancel button dismisses the dialog
+
         btnCancel.setOnClickListener(v -> dismiss());
 
-        // Confirm button triggers sign-out action
+
         btnConfirmSignOut.setOnClickListener(v -> {
             listener.onConfirmSignOut();
             dismiss();

@@ -7,7 +7,6 @@
     android:background="@drawable/background"
     android:padding="0dp">
 
-    <!-- Profile, Sign Out, Cart, Search Bar -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -69,7 +68,6 @@
             android:layout_marginTop="5dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Search Bar using TextInputLayout for better UI -->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -90,7 +88,6 @@
             android:paddingStart="16dp" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Available Products -->
     <TextView
         android:id="@+id/productsLabel"
         android:layout_width="wrap_content"
@@ -101,7 +98,6 @@
         android:textStyle="bold"
         android:padding="10dp" />
 
-    <!-- RecyclerView with Grid Layout -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/productRecyclerView"
         android:layout_width="match_parent"

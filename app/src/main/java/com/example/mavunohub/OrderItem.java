@@ -1,87 +1,56 @@
 package com.example.mavunohub;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class OrderItem {
     private String id;
-    private String phone; // Shared phone for identifying buyer or farmer
-    private String userType; // "Buyer" or "Farmer"
-    private List<Product> products;
+    private String buyerId;
+    private String farmerId;
+    private List<Map<String, Object>> products;
     private String status;
+    private Double totalPrice;
+    private String phone;
 
-    public OrderItem() {}
+    public OrderItem() {
+        this.products = new ArrayList<>();
+        this.totalPrice = null;
+    }
 
-    public OrderItem(String id, String phone, String userType, List<Product> products, String status) {
+    public OrderItem(String id, String buyerId, String farmerId, List<Map<String, Object>> products, String status,
+                     Double totalPrice, String phone) {
         this.id = id;
-        this.phone = phone;
-        this.userType = userType;
-        this.products = products;
+        this.buyerId = buyerId;
+        this.farmerId = farmerId;
+        this.products = (products != null) ? products : new ArrayList<>();
         this.status = status;
-    }
-
-    // Getter and Setter for ID
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    // Getter and Setter for Phone
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
+        this.totalPrice = totalPrice;
         this.phone = phone;
     }
 
-    // Getter and Setter for User Type
-    public String getUserType() {
-        return userType;
-    }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
-    public void setUserType(String userType) {
-        this.userType = userType;
-    }
+    public String getBuyerId() { return buyerId; }
+    public void setBuyerId(String buyerId) { this.buyerId = buyerId; }
 
-    // Getter and Setter for Products
-    public List<Product> getProducts() {
-        return products;
-    }
+    public String getFarmerId() { return farmerId; }
+    public void setFarmerId(String farmerId) { this.farmerId = farmerId; }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
+    public List<Map<String, Object>> getProducts() { return products; }
+    public void setProducts(List<Map<String, Object>> products) { this.products = products; }
 
-    // Getter and Setter for Status
-    public String getStatus() {
-        return status;
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+    public Double getTotalPrice() { return totalPrice; }
+    public void setTotalPrice(Double totalPrice) { this.totalPrice = totalPrice; }
 
-    // Calculate Total Price
-    public double getTotalPrice() {
-        double total = 0.0;
-        for (Product product : products) {
-            total += product.getPricePerUnit() * product.getQuantity();
-        }
-        return total;
-    }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
 
-    // Generate Product Details as String
-    public String getProductsDetails() {
-        StringBuilder details = new StringBuilder();
-        for (Product product : products) {
-            details.append(product.getName())
-                    .append(" (Qty: ").append(product.getQuantity())
-                    .append(" @ KES ").append(String.format("%.2f", product.getPricePerUnit()))
-                    .append(")\n");
-        }
-        return details.toString();
-    }
+    public void setImageUrl(String imageUrl) { }
+
+    public void setQuantity(int quantity) { }
 }

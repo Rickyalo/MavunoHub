@@ -2,18 +2,17 @@ package com.example.mavunohub;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,24 +29,36 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // Initialize Firebase
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        // Initialize UI Elements
         registerEmail = findViewById(R.id.signup_email);
         registerPassword = findViewById(R.id.signup_password);
         confirmPassword = findViewById(R.id.signup_confirm);
         registerButton = findViewById(R.id.signup_button);
         loginRedirectText = findViewById(R.id.loginRedirectText);
 
-        // Register Button Click Listener
         registerButton.setOnClickListener(v -> createUser());
-
-        // Redirect to Login
         loginRedirectText.setOnClickListener(v -> {
             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
             finish();
+        });
+
+
+        registerPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String password = s.toString();
+                if (!isValidPassword(password)) {
+                    registerPassword.setError("Weak password! Use uppercase, lowercase, number, and special character.");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
         });
     }
 
@@ -64,8 +75,8 @@ public class RegisterActivity extends AppCompatActivity {
             registerPassword.setError("Password is required");
             return;
         }
-        if (password.length() < 6) {
-            registerPassword.setError("Password must be at least 6 characters");
+        if (!isValidPassword(password)) {
+            registerPassword.setError("Password must contain at least 6 characters, including an uppercase, lowercase, digit, and special character.");
             return;
         }
         if (!password.equals(confirmPass)) {
@@ -73,19 +84,22 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        // Firebase Authentication - Register User
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = auth.getCurrentUser();
                         if (user != null) {
-                            // Store user details in Firestore
                             saveUserToFirestore(user.getUid(), email);
                         }
                     } else {
                         Toast.makeText(RegisterActivity.this, "Registration Failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private boolean isValidPassword(String password) {
+        String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{6,}$";
+        return password.matches(passwordPattern);
     }
 
     private void saveUserToFirestore(String userId, String email) {

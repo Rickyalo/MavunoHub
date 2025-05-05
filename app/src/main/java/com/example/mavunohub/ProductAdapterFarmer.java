@@ -25,7 +25,7 @@ public class ProductAdapterFarmer extends RecyclerView.Adapter<ProductAdapterFar
         void onDeleteClick(Product product);
     }
 
-    // Constructor with OnProductClickListener parameter
+
     public ProductAdapterFarmer(Context context, List<Product> productList, OnProductClickListener listener) {
         this.context = context;
         this.productList = productList;
@@ -52,7 +52,7 @@ public class ProductAdapterFarmer extends RecyclerView.Adapter<ProductAdapterFar
             return;
         }
 
-        // Ensure views are not null before setting data
+
         if (holder.nameTv != null) {
             holder.nameTv.setText(product.getName());
         } else {
@@ -67,7 +67,7 @@ public class ProductAdapterFarmer extends RecyclerView.Adapter<ProductAdapterFar
             holder.qtyTv.setText("Qty: " + product.getQuantity() + " " + product.getUnit());
         }
 
-        // Load product image safely with Glide
+
         if (holder.productImageView != null) {
             if (product.getImageUrl() != null && !product.getImageUrl().isEmpty()) {
                 Glide.with(context).load(product.getImageUrl()).into(holder.productImageView);
@@ -76,7 +76,7 @@ public class ProductAdapterFarmer extends RecyclerView.Adapter<ProductAdapterFar
             }
         }
 
-        // Prevent crashes from null buttons
+
         if (holder.btnEdit != null) {
             holder.btnEdit.setOnClickListener(v -> onProductClickListener.onEditClick(product));
         }
@@ -104,7 +104,7 @@ public class ProductAdapterFarmer extends RecyclerView.Adapter<ProductAdapterFar
             btnEdit = itemView.findViewById(R.id.btn_edit_product);
             btnDelete = itemView.findViewById(R.id.btn_delete_product);
 
-            // Log if any view is null (useful for debugging)
+
             if (productImageView == null) Log.e("ProductAdapterFarmer", "productImageView is NULL");
             if (nameTv == null) Log.e("ProductAdapterFarmer", "nameTv is NULL");
             if (pricePerUnitTv == null) Log.e("ProductAdapterFarmer", "pricePerUnitTv is NULL");

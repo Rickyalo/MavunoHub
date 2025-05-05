@@ -2,6 +2,7 @@ package com.example.mavunohub;
 
 public class CartItem {
     private String id;
+    private String productId;
     private String name;
     private double pricePerUnit;
     private int quantity;
@@ -10,11 +11,13 @@ public class CartItem {
     private String subCounty;
     private String phone;
     private String userId;
+    private String sellerId;
 
     public CartItem() {}
 
-    public CartItem(String id, String name, double pricePerUnit, int quantity, String imageUrl, String county, String subCounty, String phone, String userId) {
+    public CartItem(String id, String productId, String name, double pricePerUnit, int quantity, String imageUrl, String county, String subCounty, String phone, String userId, String sellerId) {
         this.id = id;
+        this.productId = productId;
         this.name = name;
         this.pricePerUnit = pricePerUnit;
         this.quantity = quantity;
@@ -23,6 +26,7 @@ public class CartItem {
         this.subCounty = subCounty;
         this.phone = phone;
         this.userId = userId;
+        this.sellerId = sellerId;
     }
 
     public String getId() {
@@ -31,6 +35,14 @@ public class CartItem {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
     public String getName() {
@@ -97,14 +109,21 @@ public class CartItem {
         this.userId = userId;
     }
 
+    public String getSellerId() {
+        return sellerId;
+    }
+
+    public void setSellerId(String sellerId) {
+        this.sellerId = sellerId;
+    }
+
     public double getTotalPrice() {
         return pricePerUnit * quantity;
     }
 
-    // Additional Validation Method for Phone Number
     public String getFormattedPhone() {
         if (phone != null && phone.startsWith("0")) {
-            return "+254" + phone.substring(1); // Add country code for Kenyan numbers
+            return "+254" + phone.substring(1);
         }
         return phone;
     }

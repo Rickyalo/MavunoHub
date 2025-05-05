@@ -1,6 +1,7 @@
 package com.example.mavunohub;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +60,20 @@ public class ProductAdapterBuyer extends RecyclerView.Adapter<ProductAdapterBuye
                 (product.getCounty() != null ? product.getCounty() : "Unknown") + ", " +
                 (product.getSubCounty() != null ? product.getSubCounty() : ""));
 
+        if (product.getQuantity() <= 0) {
+            holder.qtyTv.setText("Out of Stock");
+            holder.qtyTv.setTextColor(Color.RED);
+            holder.btnAddToCart.setEnabled(false);
+            holder.btnAddToCart.setImageResource(R.drawable.ic_out_of_stock);
+            holder.btnAddToCart.setBackgroundColor(Color.GRAY);
+        } else {
+            holder.qtyTv.setText("Qty: " + product.getQuantity() + " " + product.getUnit());
+            holder.qtyTv.setTextColor(Color.BLACK);
+            holder.btnAddToCart.setEnabled(true);
+            holder.btnAddToCart.setImageResource(R.drawable.ic_add_to_cart);
+            holder.btnAddToCart.setBackgroundColor(Color.GREEN);
+        }
+
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onProductClick(product);
@@ -66,7 +81,7 @@ public class ProductAdapterBuyer extends RecyclerView.Adapter<ProductAdapterBuye
         });
 
         holder.btnAddToCart.setOnClickListener(v -> {
-            if (listener != null) {
+            if (listener != null && product.getQuantity() > 0) {
                 listener.onAddToCartClick(product);
             }
         });
@@ -84,8 +99,7 @@ public class ProductAdapterBuyer extends RecyclerView.Adapter<ProductAdapterBuye
 
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
         ImageView productImageView, btnAddToCart;
-        TextView nameTv, pricePerUnitTv, qtyTv;
-        TextView totalPriceTv, phoneTv, locationTv;
+        TextView nameTv, pricePerUnitTv, qtyTv, totalPriceTv, phoneTv, locationTv;
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);

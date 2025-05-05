@@ -30,7 +30,6 @@ android {
 }
 
 dependencies {
-    implementation libs.play.services.auth
     implementation libs.appcompat
     implementation libs.material
     implementation libs.activity
@@ -55,5 +54,12 @@ dependencies {
     implementation libs.google.firebase.firestore
     implementation libs.firebase.storage.v2101
     implementation libs.picasso.v28
-
+    implementation libs.google.firebase.firestore
+    implementation libs.google.firebase.auth
+    implementation libs.appcompat
+    implementation libs.recyclerview
+    implementation libs.google.firebase.firestore
+    implementation libs.itext7.core
+    implementation libs.play.services.auth
+    implementation libs.cardview
 }

@@ -82,7 +82,7 @@
                 android:padding="4dp"/>
         </LinearLayout>
 
-        <!-- Quantity and Stock Status -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -105,7 +105,6 @@
                 android:id="@+id/stock_status_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="In Stock"
                 android:textSize="16sp"
                 android:textColor="@color/green"
                 android:textStyle="bold"

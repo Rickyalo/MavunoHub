@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.UUID;
 
 public class UserDetailsActivity extends AppCompatActivity {
-
     private static final int PICK_IMAGE_REQUEST = 1;
 
     private ImageView ivProfilePicture;
@@ -42,20 +41,18 @@ public class UserDetailsActivity extends AppCompatActivity {
     private RadioGroup loginTypeGroup;
     private Button btnUpdate, btnUploadPicture;
 
-    private String profileImageUrl = ""; // Stores uploaded image URL
+    private String profileImageUrl = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_details);
 
-        // Initialize Firebase
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
-        // Initialize UI elements
         ivProfilePicture = findViewById(R.id.ivProfilePicture);
         btnUploadPicture = findViewById(R.id.btnUploadPicture);
         etName = findViewById(R.id.etName);
@@ -66,12 +63,11 @@ public class UserDetailsActivity extends AppCompatActivity {
         btnUpdate = findViewById(R.id.btnUpdate);
 
         btnUploadPicture.setOnClickListener(v -> chooseImage());
-
         btnUpdate.setOnClickListener(v -> {
             if (imageUri != null) {
                 uploadImageAndSaveData();
             } else {
-                saveUserData(profileImageUrl); // Use existing profile image if no new image is selected
+                saveUserData(profileImageUrl);
             }
         });
     }
@@ -119,14 +115,12 @@ public class UserDetailsActivity extends AppCompatActivity {
             return;
         }
 
-        // Validate phone number (Kenyan format)
-        if (!phone.matches("\\d{10}")) { // Ensures exactly 10 digits
+        if (!phone.matches("\\d{10}")) {
             Toast.makeText(this, "Enter a valid 10-digit phone number!", Toast.LENGTH_SHORT).show();
             return;
         }
 
         String userType = ((RadioButton) findViewById(selectedLoginType)).getText().toString();
-
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
             String userId = user.getUid();
@@ -136,7 +130,11 @@ public class UserDetailsActivity extends AppCompatActivity {
             userData.put("county", county);
             userData.put("subCounty", subCounty);
             userData.put("userType", userType);
-            userData.put("profileImageUrl", imageUrl); // Store profile image URL
+            userData.put("profileImageUrl", imageUrl);
+
+            if (userType.equals("Farmer")) {
+                userData.put("farmerId", userId);
+            }
 
             DocumentReference userRef = db.collection("users").document(userId);
             userRef.set(userData)

@@ -7,16 +7,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginActivity extends AppCompatActivity {
-
     private EditText loginEmail, loginPassword;
     private Button loginButton;
     private TextView signupRedirectText, forgotPassword;
@@ -28,27 +25,22 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Initialize Firebase Auth & Firestore
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        // Initialize UI elements
         loginEmail = findViewById(R.id.login_email);
         loginPassword = findViewById(R.id.login_password);
         loginButton = findViewById(R.id.login_button);
         signupRedirectText = findViewById(R.id.signupRedirectText);
         forgotPassword = findViewById(R.id.forgotPassword);
 
-        // Login Button Click Event
         loginButton.setOnClickListener(v -> loginUser());
 
-        // Redirect to Signup
         signupRedirectText.setOnClickListener(v -> {
             startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
             finish();
         });
 
-        // Forgot Password Click Event
         forgotPassword.setOnClickListener(v -> resetPassword());
     }
 
@@ -60,13 +52,11 @@ public class LoginActivity extends AppCompatActivity {
             loginEmail.setError("Email is required");
             return;
         }
-
         if (TextUtils.isEmpty(password)) {
             loginPassword.setError("Password is required");
             return;
         }
 
-        // Firebase login authentication
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -76,7 +66,8 @@ public class LoginActivity extends AppCompatActivity {
                             checkUserProfile(user.getUid());
                         }
                     } else {
-                        Toast.makeText(LoginActivity.this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error occurred";
+                        Toast.makeText(LoginActivity.this, "Login failed: " + errorMessage, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -91,17 +82,12 @@ public class LoginActivity extends AppCompatActivity {
                             String name = document.getString("name");
 
                             if (TextUtils.isEmpty(userType)) {
-                                // If userType is not set, redirect to UserDetailsActivity
                                 Toast.makeText(LoginActivity.this, "Please complete your profile", Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(LoginActivity.this, UserDetailsActivity.class));
                             } else {
-                                // Navigate based on user type
-                                Intent intent;
-                                if ("Farmer".equalsIgnoreCase(userType)) {
-                                    intent = new Intent(LoginActivity.this, MainActivityFarmer.class);
-                                } else {
-                                    intent = new Intent(LoginActivity.this, MainActivityBuyer.class);
-                                }
+                                Intent intent = "Farmer".equalsIgnoreCase(userType) ?
+                                        new Intent(LoginActivity.this, MainActivityFarmer.class) :
+                                        new Intent(LoginActivity.this, MainActivityBuyer.class);
                                 intent.putExtra("userName", name);
                                 startActivity(intent);
                             }

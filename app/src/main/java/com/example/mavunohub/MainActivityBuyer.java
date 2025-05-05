@@ -1,69 +1,57 @@
 package com.example.mavunohub;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MainActivityBuyer extends AppCompatActivity {
 
-    // Firebase
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
-
-    // UI Components
     private RecyclerView recyclerView;
     private ProductAdapterBuyer productAdapter;
-    private TextView userNameTextView, cartTextView;
+    private TextView userNameTextView, cartTextView, signOutTextView;
     private ImageView profileImageView;
     private EditText searchField;
-
-    // Data
     private List<Product> productList;
-    private String userName, profileImageUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FirebaseApp.initializeApp(this);
         setContentView(R.layout.activity_buyer_main);
 
-        // Initialize Firebase
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        // Initialize Views
         userNameTextView = findViewById(R.id.username);
         profileImageView = findViewById(R.id.profilePicture);
         cartTextView = findViewById(R.id.cart_tv);
+        signOutTextView = findViewById(R.id.signOut);
         searchField = findViewById(R.id.searchField);
         recyclerView = findViewById(R.id.productRecyclerView);
-
-        // RecyclerView Setup
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+
         productList = new ArrayList<>();
         productAdapter = new ProductAdapterBuyer(this, productList, new ProductAdapterBuyer.OnProductClickListener() {
             @Override
@@ -73,19 +61,16 @@ public class MainActivityBuyer extends AppCompatActivity {
 
             @Override
             public void onAddToCartClick(Product product) {
-                addToCart(product); // Calls add to cart and creates the order
+                addToCart(product);
             }
         });
-        recyclerView.setAdapter(productAdapter);
 
-        // Load Data
+        recyclerView.setAdapter(productAdapter);
         loadUserData();
         loadProducts();
 
-        // Cart Click
         cartTextView.setOnClickListener(v -> startActivity(new Intent(MainActivityBuyer.this, CartActivity.class)));
 
-        // Search Field Listener
         searchField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -98,19 +83,18 @@ public class MainActivityBuyer extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {}
         });
+
+        signOutTextView.setOnClickListener(v -> showSignOutConfirmation());
     }
 
     private void loadUserData() {
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user != null) {
-            String userId = user.getUid();
+        String userId = FirebaseAuth.getInstance().getUid();
+        if (userId != null) {
             db.collection("users").document(userId).get()
                     .addOnSuccessListener(documentSnapshot -> {
-                        if (documentSnapshot != null && documentSnapshot.exists()) {
-                            userName = documentSnapshot.getString("name");
-                            profileImageUrl = documentSnapshot.getString("profileImageUrl");
-
-                            userNameTextView.setText(userName != null ? userName : "User");
+                        if (documentSnapshot.exists()) {
+                            userNameTextView.setText(documentSnapshot.getString("name"));
+                            String profileImageUrl = documentSnapshot.getString("profileImageUrl");
                             if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
                                 Glide.with(this).load(profileImageUrl).into(profileImageView);
                             }
@@ -124,18 +108,28 @@ public class MainActivityBuyer extends AppCompatActivity {
         db.collection("products").get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     productList.clear();
+                    List<Product> inStockList = new ArrayList<>();
+                    List<Product> outOfStockList = new ArrayList<>();
+
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                         Product product = doc.toObject(Product.class);
-                        productList.add(product);
+                        if (product.getQuantity() > 0) {
+                            inStockList.add(product);
+                        } else {
+                            outOfStockList.add(product);
+                        }
                     }
+
+                    productList.addAll(inStockList);
+                    productList.addAll(outOfStockList);
                     productAdapter.updateList(productList);
                 })
                 .addOnFailureListener(e -> Toast.makeText(this, "Failed to load products", Toast.LENGTH_SHORT).show());
     }
 
     private void addToCart(Product product) {
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user == null) {
+        String userId = FirebaseAuth.getInstance().getUid();
+        if (userId == null) {
             Toast.makeText(this, "Please log in first", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -143,51 +137,30 @@ public class MainActivityBuyer extends AppCompatActivity {
         String cartItemId = db.collection("cart").document().getId();
         CartItem cartItem = new CartItem(
                 cartItemId,
+                product.getProductId(),
                 product.getName(),
                 product.getPricePerUnit(),
-                1, // Default quantity
+                1,
                 product.getImageUrl(),
                 product.getCounty(),
                 product.getSubCounty(),
                 product.getPhone(),
-                user.getUid() // Add userId
+                userId,
+                product.getSellerId()
         );
 
-        db.collection("cart")
-                .document(cartItemId)
+        db.collection("cart").document(cartItemId)
                 .set(cartItem)
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(this, "Product added to cart!", Toast.LENGTH_SHORT).show();
-                    createOrder(product); // Call createOrder method here
-                })
+                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Product added to cart!", Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e -> Toast.makeText(this, "Failed to add to cart: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-    }
-
-    private void createOrder(Product product) {
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user == null) {
-            Toast.makeText(this, "Please log in first", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        Map<String, Object> orderData = new HashMap<>();
-        orderData.put("phone", product.getPhone()); // Use product's phone for buyer or seller
-        orderData.put("userType", "Buyer"); // Assuming the user is a buyer
-        orderData.put("products", List.of(product)); // Create an order with the product
-        orderData.put("status", "Pending"); // Initial order status
-
-        db.collection("orders")
-                .add(orderData)
-                .addOnSuccessListener(documentReference -> Toast.makeText(this, "Order created successfully!", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e -> Toast.makeText(this, "Failed to create order: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     private void filterProducts(String query) {
         List<Product> filteredList = new ArrayList<>();
         for (Product product : productList) {
-            if ((product.getName() != null && product.getName().toLowerCase().contains(query.toLowerCase())) ||
-                    (product.getCounty() != null && product.getCounty().toLowerCase().contains(query.toLowerCase())) ||
-                    (product.getSubCounty() != null && product.getSubCounty().toLowerCase().contains(query.toLowerCase()))) {
+            if (product.getName().toLowerCase().contains(query.toLowerCase()) ||
+                    product.getCounty().toLowerCase().contains(query.toLowerCase()) ||
+                    product.getSubCounty().toLowerCase().contains(query.toLowerCase())) {
                 filteredList.add(product);
             }
         }
@@ -198,28 +171,13 @@ public class MainActivityBuyer extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_buyer, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.signOut) {
-            showSignOutDialog();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void showSignOutDialog() {
+    private void showSignOutConfirmation() {
         new AlertDialog.Builder(this)
                 .setTitle("Sign Out")
                 .setMessage("Are you sure you want to sign out?")
                 .setPositiveButton("Yes", (dialog, which) -> {
                     mAuth.signOut();
+                    Toast.makeText(MainActivityBuyer.this, "Signed out successfully", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(MainActivityBuyer.this, LoginActivity.class));
                     finish();
                 })

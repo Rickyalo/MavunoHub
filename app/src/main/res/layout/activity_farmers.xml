@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -8,7 +9,6 @@
     android:focusableInTouchMode="true"
     android:clickable="true">
 
-    <!-- Top Bar with Profile & Logout -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,8 +19,9 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:scaleType="centerCrop"
-            android:background="@drawable/round_background"
             android:src="@drawable/profile_circle"
+            android:background="@drawable/round_background"
+            android:clipToOutline="true"
             android:layout_alignParentStart="true"
             android:contentDescription="Profile" />
 
@@ -33,7 +34,8 @@
             android:textSize="18sp"
             android:textColor="@color/black"
             android:layout_toEndOf="@id/profilePicture"
-            android:layout_marginStart="10dp" />
+            android:layout_marginStart="10dp"
+            android:layout_centerVertical="true" />
 
         <ImageView
             android:id="@+id/logoutIcon"
@@ -41,52 +43,159 @@
             android:layout_height="30dp"
             android:src="@drawable/ic_logout"
             android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:contentDescription="Logout" />
     </RelativeLayout>
 
-    <!-- Buttons for Adding & Managing Products -->
-    <Button
-        android:id="@+id/btnAddProduct"
+    <GridLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Add Product"
-        android:backgroundTint="@color/textTabLight"
-        android:textColor="@color/white"
-        android:layout_marginTop="10dp"
-        android:focusable="true"
-        android:clickable="true" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:columnCount="2"
+        android:rowCount="2"
+        android:alignmentMode="alignMargins"
+        android:rowOrderPreserved="false"
+        android:useDefaultMargins="true"
+        android:padding="10dp">
 
-    <Button
-        android:id="@+id/btnManageProducts"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Manage Products"
-        android:backgroundTint="@color/blue"
-        android:textColor="@color/white"
-        android:layout_marginTop="10dp"
-        android:focusable="true"
-        android:clickable="true" />
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardAddProduct"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground">
 
-    <Button
-        android:id="@+id/btnViewOrders"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="View Orders"
-        android:backgroundTint="@color/orange"
-        android:textColor="@color/white"
-        android:layout_marginTop="10dp"
-        android:focusable="true"
-        android:clickable="true" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@color/textTabLight">
 
-    <!-- Generate Report Button -->
-    <Button
-        android:id="@+id/btnGenerateReport"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Generate Report"
-        android:backgroundTint="@color/green"
-        android:textColor="@color/white"
-        android:layout_marginTop="10dp"
-        android:focusable="true"
-        android:clickable="true" />
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_add_product"
+                    android:contentDescription="Add Product" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add Product"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="10dp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardManageProducts"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@color/blue">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_manage_products"
+                    android:contentDescription="Manage Products" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Manage Products"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="10dp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewOrders"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@color/orange">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_view_orders"
+                    android:contentDescription="View Orders" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="View Orders"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="10dp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardGenerateReport"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@color/green">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_generate_report"
+                    android:contentDescription="Generate Report" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Generate Report"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="10dp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </GridLayout>
 </LinearLayout>

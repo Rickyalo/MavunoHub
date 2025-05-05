@@ -44,14 +44,6 @@
             android:textColor="@color/black"
             android:gravity="center"/>
 
-        <TextView
-            android:id="@+id/tvTotalPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Total: KES 0.00"
-            android:textSize="14sp"
-            android:textColor="@color/black"
-            android:gravity="center"/>
 
         <!-- Stock Status -->
         <TextView
@@ -98,29 +90,6 @@
                     android:paddingTop="4dp"/>
             </LinearLayout>
 
-            <!-- Mark as Sold Action -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center">
-
-                <ImageView
-                    android:id="@+id/btn_mark_sold"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/ic_sold"
-                    android:contentDescription="Mark as Sold"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Mark Sold"
-                    android:textSize="12sp"
-                    android:textColor="@color/black"
-                    android:paddingTop="4dp"/>
-            </LinearLayout>
 
             <!-- Delete Action -->
             <LinearLayout

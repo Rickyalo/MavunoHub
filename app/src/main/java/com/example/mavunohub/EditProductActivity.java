@@ -38,12 +38,12 @@ public class EditProductActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_product);
 
-        // Initialize Firebase services
+
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         auth = FirebaseAuth.getInstance();
 
-        // Initialize UI components
+
         editProductImage = findViewById(R.id.edit_product_image);
         etProductName = findViewById(R.id.et_product_name);
         etPricePerUnit = findViewById(R.id.et_price_per_unit);
@@ -52,7 +52,7 @@ public class EditProductActivity extends AppCompatActivity {
         btnSaveChanges = findViewById(R.id.btn_save_changes);
         btnCancelEdit = findViewById(R.id.btn_cancel_edit);
 
-        // Get product ID from intent
+
         productId = getIntent().getStringExtra("productId");
         if (productId == null) {
             Toast.makeText(this, "No product found", Toast.LENGTH_SHORT).show();
@@ -60,16 +60,16 @@ public class EditProductActivity extends AppCompatActivity {
             return;
         }
 
-        // Load product details
+
         loadProductDetails();
 
-        // Change image button
+
         btnChangeImage.setOnClickListener(v -> selectImage());
 
-        // Save changes button
+
         btnSaveChanges.setOnClickListener(v -> saveChanges());
 
-        // Cancel button
+
         btnCancelEdit.setOnClickListener(v -> finish());
     }
 
